@@ -27,7 +27,6 @@ export class StreamService {
 
     const data = await axios.get(provider.url, {
       responseType: 'stream',
-      insecureHTTPParser: true,
     });
 
     return data;

@@ -21,14 +21,12 @@ export class StreamController {
     try {
       const { data, headers } = await this.streamService.play(id);
 
-      res.set({
-        'Content-Type': headers['content-type'],
-        'Content-Length': headers['content-length'],
-      });
+      res.set(headers);
 
       data.pipe(res);
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      console.error(error);
+      throw new HttpException('test', 404);
     }
   }
 }
