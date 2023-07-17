@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res } from '@nestjs/common';
+import { Controller, Get, HttpException, Param, Res } from '@nestjs/common';
 import { StreamService } from './stream.service';
 import type { Response } from 'express';
 
@@ -18,13 +18,17 @@ export class StreamController {
 
   @Get(':id/play')
   async play(@Param('id') id: number, @Res() res: Response) {
-    const { data, headers } = await this.streamService.play(id);
+    try {
+      const { data, headers } = await this.streamService.play(id);
 
-    res.set({
-      'Content-Type': headers['content-type'],
-      'Content-Length': headers['content-length'],
-    });
+      res.set({
+        'Content-Type': headers['content-type'],
+        'Content-Length': headers['content-length'],
+      });
 
-    data.pipe(res);
+      data.pipe(res);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 }
